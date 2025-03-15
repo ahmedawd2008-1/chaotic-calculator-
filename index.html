@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chaotic Calculator 🔥</title>
+  <style>
+    body {
+      background-color: black;
+      font-family: 'Comic Sans MS', cursive;
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
+    #warning {
+      font-size: 2em;
+      color: red;
+      margin-top: 20%;
+      animation: blink 1s infinite;
+    }
+    #calculator, #chaosBtn {
+      display: none;
+    }
+    #display {
+      width: 80%;
+      height: 60px;
+      font-size: 2em;
+      text-align: right;
+      margin-bottom: 10px;
+      background-color: #222;
+      color: lime;
+      border: none;
+      outline: none;
+      position: relative;
+      z-index: 100;
+      margin: auto;
+      padding: 10px;
+      transition: all 0.2s ease-in-out;
+    }
+    button {
+      width: 80px;
+      height: 80px;
+      font-size: 1.5em;
+      background-color: white;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      z-index: 5;
+      user-select: none;
+    }
+    #chaosBtn {
+      display: none;
+      margin-top: 20px;
+      padding: 20px 40px;
+      font-size: 2em;
+      background-color: red;
+      color: white;
+      border: 3px solid white;
+      cursor: pointer;
+      animation: blink 0.5s infinite alternate;
+    }
+    @keyframes blink {
+      50% { opacity: 0.4; }
+    }
+  </style>
+</head>
+<body>
+  <p id="warning">⚠️ If your calculation is wrong, your computer will be hacked. ⚠️</p>
+
+  <div id="calculator">
+    <h1>Chaotic Calculator 🔥</h1>
+    <input id="display" disabled />
+    <br>
+    <div id="buttons"></div>
+  </div>
+
+  <button id="chaosBtn" onclick="triggerRealChaos()">💀 Get Reliable Calculations 💀</button>
+
+  <audio id="laugh" src="https://www.soundjay.com/human/evil-laugh-1.mp3"></audio>
+  <audio id="scream" src="https://www.soundjay.com/human/scream-1.mp3"></audio>
+  <audio id="glitch" src="https://www.soundjay.com/button/beep-07.mp3"></audio>
+
+  <script>
+    const display = document.getElementById('display');
+    const buttonsContainer = document.getElementById('buttons');
+    const laughSound = document.getElementById('laugh');
+    const screamSound = document.getElementById('scream');
+    const glitchSound = document.getElementById('glitch');
+    const chaosBtn = document.getElementById('chaosBtn');
+
+    const buttons = [
+      '1', '2', '3', '+',
+      '4', '5', '6', '-',
+      '7', '8', '9', '*',
+      'C', '0', '=', '/'
+    ];
+
+    const chaoticSyntax = {
+      '+': '-',
+      '-': '*',
+      '*': '/',
+      '/': '+'
+    };
+
+    let wrongCount = 0;
+
+    // Show warning first, then show the calculator
+    setTimeout(() => {
+      document.getElementById('warning').style.display = 'none';
+      document.getElementById('calculator').style.display = 'block';
+    }, 5000);
+
+    buttons.forEach(button => {
+      const btn = document.createElement('button');
+      btn.textContent = button;
+      btn.onclick = () => handleInput(button);
+      buttonsContainer.appendChild(btn);
+
+      // Buttons will keep moving and colliding, but **NEVER escape the screen**
+      moveButton(btn);
+    });
+
+    function handleInput(value) {
+      if (value === 'C') {
+        display.value = '';
+      } 
+      else if (value === '=') {
+        try {
+          if (display.value.includes('/0')) {
+            display.value = 'Once 10B, Always 10B 👑';
+          } else {
+            let result = eval(display.value);
+            result += Math.floor(Math.random() * 50) - 20; // Wrong answer
+            display.value = result;
+
+            wrongCount++;
+
+            // After 2 wrong answers, show chaos button
+            if (wrongCount >= 2) {
+              chaosBtn.style.display = 'block';
+            }
+          }
+        } catch {
+          display.value = 'System Crashed 💀';
+        }
+      } 
+      else {
+        const chaoticValue = (Math.random() > 0.6 && chaoticSyntax[value]) 
+          ? chaoticSyntax[value] 
+          : value;
+        display.value += chaoticValue;
+      }
+    }
+
+    // Button movement (LIMITED INSIDE SCREEN)
+    function moveButton(button) {
+      let speedX = (Math.random() > 0.5 ? 8 : -8); 
+      let speedY = (Math.random() > 0.5 ? 8 : -8); 
+
+      setInterval(() => {
+        let currentX = parseInt(button.style.left) || Math.random() * window.innerWidth;
+        let currentY = parseInt(button.style.top) || Math.random() * window.innerHeight;
+
+        currentX += speedX;
+        currentY += speedY;
+
+        // Prevent buttons from escaping the screen
+        if (currentX > window.innerWidth - 80) speedX *= -1;
+        if (currentX < 0) speedX *= -1;
+        if (currentY > window.innerHeight - 80) speedY *= -1;
+        if (currentY < 0) speedY *= -1;
+
+        button.style.left = currentX + 'px';
+        button.style.top = currentY + 'px';
+        button.style.transform = `rotate(${Math.random() * 360}deg)`; 
+      }, 30); 
+    }
+
+    // When user clicks "Get Reliable Calculations"
+    function triggerRealChaos() {
+      alert("🚨 Your computer is being hacked...");
+
+      document.body.style.backgroundImage = 'url(https://media.tenor.com/Jav6HikjN4kAAAAC/hackermode.gif)';
+      document.body.style.color = 'red';
+
+      setInterval(() => {
+        document.body.style.backgroundColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        glitchSound.play();
+      }, 100);
+
+      setTimeout(() => { screamSound.play(); }, 2000);
+
+      setInterval(() => { alert('⚠️ Your camera is being hacked...'); }, 3000);
+
+      setTimeout(() => { window.open("https://hackertyper.net/", "_blank"); }, 4000);
+
+      setTimeout(() => { window.open("https://geekprank.com/fake-virus/", "_blank"); }, 6000);
+
+      setTimeout(() => { location.reload(); }, 10000);
+    }
+  </script>
+</body>
+</html>
